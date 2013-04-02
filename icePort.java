@@ -1,13 +1,17 @@
 import java.awt.*;
+
 import javax.swing.*;
+
+import GeneralRequirements.MyHandler;
+
 import java.awt.event.*;
 
 
 
 public class icePort extends JFrame{
-  JMenuBar menuBar;
+	JMenuBar menuBar;
 	JMenu function;
-	JMenuItem help,about,quit;
+	JMenuItem help,about,quit, REFRESH_INTERVAL_item;
 	JDesktopPane desktop;
 	static int offsetMultiplier = 0;
 	
@@ -43,14 +47,22 @@ public class icePort extends JFrame{
 		
 		menuBar = new JMenuBar();
 		function = new JMenu("File");
-		help = new JMenuItem ("Help(F1)"); // to be done by nad
+		help = new JMenuItem ("Help"); // to be done by nad
 		about = new JMenuItem ("About"); // to be done by chubby
 		quit = new JMenuItem("Exit");
+		REFRESH_INTERVAL_item= new JMenuItem("Refresh interval");
 		
 		function.add(help);
+		function.addSeparator();
 		function.add(about);
+		function.addSeparator();
 		function.add(quit);
+		function.add(REFRESH_INTERVAL_item);
+		
+		help.setAccelerator(KeyStroke.getKeyStroke("F1"));
+		
 		menuBar.add(function);
+		
 		return menuBar;
 	}
 	
@@ -127,14 +139,72 @@ public class icePort extends JFrame{
 	}*/
 	
 		//quitting the program
-		quit.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
+		quit.addActionListener(new MyHandler());
+		help.addActionListener(new MyHandler());
+		about.addActionListener(new MyHandler());
+		REFRESH_INTERVAL_item.addActionListener(new MyHandler());
+		
+	}
+	
+	class MyHandler implements ActionListener{
+		
+		public void actionPerformed(ActionEvent e){
+			if(e.getSource() ==quit){
 				System.exit(0);
 			}
+			
+			if(e.getSource()== about){
+				JDialog aboutDialog = new JDialog();
+				aboutDialog.setBounds(10,10,300,300);
+				aboutDialog.setVisible(true);
+			}
+			
+			if(e.getSource()== help){
+				JDialog helpDialog = new JDialog();	
+				helpDialog.setBounds(10,10,300,300);
+				helpDialog.setModal(true);
+				helpDialog.setLocationRelativeTo(null);
+				helpDialog.setVisible(true);
+				}
+			
+			if(e.getSource()== REFRESH_INTERVAL_item){
+				// Open an internal frame when the item is selected :
+				JInternalFrame RIframe = new JInternalFrame();	
+				RIframe.setBounds(10,10,300,300);
+				JPanel panel= (JPanel) RIframe.getContentPane();
+				
+				// In the frame, we can select the refresh interval via a combo box : 
+				JTextArea text = new JTextArea("Select the refresh interval of the ICE World :"); 
+				DefaultComboBoxModel mdc = new DefaultComboBoxModel(); 
+				final JComboBox combo = new JComboBox();
+				combo.setModel(mdc);
+				combo.setBounds(new Rectangle(19, 36, 129, 23)); 
+				
+				for(int i=1; i<=10; i++){
+				mdc.addElement(""+i); 
+				combo.addItem(""+i); 	// adding the elements of the combo			
+				}	
+				
+				combo.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						int new_value= (Integer) combo.getSelectedItem();
+						StateFetching.setREFRESH_INTERVAL(new_value);
+					}
+				});
+				
+				
+				panel.add(text, BorderLayout.CENTER);
+				panel.add(combo, BorderLayout.CENTER);
+				RIframe.setVisible(true);
+			}
 			});
-	
-	}
+				}
+			
+					
+
+		}
+}
 
 }

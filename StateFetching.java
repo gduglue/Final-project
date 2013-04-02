@@ -1,94 +1,95 @@
-package iceWorldpeek;
-
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.*;
-import java.util.Scanner;
-import static org.junit.Assert.*;
-import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-public class iceWorldPeek { 
-  
-	public static void main (String[]args){
-		iceWorldPeek run = new iceWorldPeek();
-		try {
-			run.URLtester();
-		} catch (Exception e) {
-			
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+import javax.swing.*;
+
+
+public class StateFetching extends JFrame implements Runnable {
+
+	protected Thread thread;
+	protected int REFRESH_INTERVAL;
+	
+	JSON weather, 
+	weather_time,
+	userID,
+	username,
+	icetizen_type,
+	IP_address,
+	ice_port_ID,
+	intended_destination,
+	time,
+	position;
+	
+	public StateFetching() {
+		if(thread==null){
+			thread=new Thread(this);
+			thread.start();
 		}
 	}
 	
-	
-	//for testing URL connect
-	public void URLtester() throws Exception {
-	    String locat = "http://iceworld.sls-atl.com/api/explore";
-
-	    try {
-	    	System.out.println("..Checking for connection..");
-	    	System.out.println("Press CTRL + Z for QUIT");
-	    	
-	        URL url = new URL(locat);
-	        HttpURLConnection uconn = (HttpURLConnection) url.openConnection();
-	        uconn.connect();
-
-	        //check if connected if connect show can be reached
-	        assertEquals(HttpURLConnection.HTTP_OK, uconn.getResponseCode());
-	        System.out.println("ICE WORLD can be reached.");
-	        HTTPrequest();
-	    } catch (IOException e) {
-	        System.out.println("ICE WORLD cannot be connected");
-	   
-	    } 
+	public void init(){
+		thread=null;
+		REFRESH_INTERVAL=10000;
 	}
-	
-	
+
+
+
+	public void run(){
+		while(Thread.currentThread()==thread){
+			StateFetching refresh = new StateFetching();
+			try {
+				refresh.URLtester();
+			} catch (Exception e) {	}
+			
+			
+			try{Thread.currentThread().sleep(REFRESH_INTERVAL);			
+			}catch(InterruptedException e){}
+			
+			}
+		}
 
 	
-	
-	
-	// choice after connection to HTTP has been built
-		public static void HTTPrequest() throws IOException{
 		
-		boolean exit = false;
-			while(!exit){
-			System.out.println("Select choice of your request (1-6):\n<1> Time\n<2> " +
-					"States\n<3> Actions\n<4> gResources\n<5> gURL\n<6> EXIT");
-			 Scanner kb = new Scanner(System.in);
-	    	int key = kb.nextInt();
-	    	 
-			String req ="";
-			
-			if(key==1) req+="time";
-			else if (key==2) req+="states";
-			else if (key==3) req+="actions&from=";
-			else if (key==4) req+="gresources&uid=";
-			else if (key==5) req+="gurl&gid=";
-			else if (key==6){
-			System.out.println("Program is terminated");
-			System.exit(0);
-			}
-			
-	        URL myURL = new URL("http://iceworld.sls-atl.com/api/&cmd="+req);
-	        URLConnection oc = myURL.openConnection();
-	        BufferedReader in = new BufferedReader(new InputStreamReader(oc.getInputStream()));
-	        String inputLine;
-	        String response = "";
-	       
-	        // read the API contents
-			while ((inputLine = in.readLine()) != null) {
-				response += inputLine+"\n";
-			}
-	        
-	        	System.out.println(response);
-	        
-	        in.close();
-	        //return response;
-	        break;
-	    }
+		//for testing URL connect
+		public void URLtester() throws Exception {
+		    String locat = "http://iceworld.sls-atl.com/api/explore";
+
+		    try {
+		    	/*
+		    	System.out.println("..Checking for connection..");
+		    	System.out.println("Press CTRL + Z for QUIT");
+		    	*/
+		    	
+		        URL url = new URL(locat);
+		        HttpURLConnection uconn = (HttpURLConnection) url.openConnection();
+		        uconn.connect();
+
+		        //check if connected if connect show can be reached
+		        assertEquals(HttpURLConnection.HTTP_OK, uconn.getResponseCode());
+		       
+		    } catch (IOException e) {
+		    	
+		    	JDialog warning = new JDialog();
+				warning.setBounds(10,10,300,300);
+				warning.setModal(true);
+				Container container= warning.getContentPane();
+				JOptionPane.showMessageDialog(container,
+					    "The ICE World cannot be reached",
+					    "Warning",
+					    JOptionPane.WARNING_MESSAGE);
+				warning.setVisible(true);
+		        
+		   
+		    } 
 		}
+		
+		
+		public void setREFRESH_INTERVAL(int interval){
+			interval=interval*1000;
+			this.REFRESH_INTERVAL=interval;
+		}		
 }
-	
-
-
-	

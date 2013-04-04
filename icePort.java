@@ -1,10 +1,24 @@
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
-
-import GeneralRequirements.MyHandler;
-
-import java.awt.event.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
 
 
@@ -114,29 +128,6 @@ public class icePort extends JFrame{
 
 
 	private void addListener() {
-	/*	help.setMnemonic(KeyEvent.VK_F1);
-		//accelerator() needed else setMnemonic would fire new menu as well as the menuitem wanted
-		help.setAccelerator(KeyStroke.getKeyStroke
-				(KeyEvent.VK_F1, ActionEvent.CTRL_MASK));
-		help.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				//put in the Help() 
-			}
-		});
-		
-		about.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-			// open up the about page
-			}
-			});
-		
-
-	
-	}*/
 	
 		//quitting the program
 		quit.addActionListener(new MyHandler());
@@ -198,13 +189,13 @@ public class icePort extends JFrame{
 				panel.add(text, BorderLayout.CENTER);
 				panel.add(combo, BorderLayout.CENTER);
 				RIframe.setVisible(true);
-			}
-			});
-				}
+			}	
+		}
+				
 			
 					
 
-		}
+	}
 }
 
-}
+
